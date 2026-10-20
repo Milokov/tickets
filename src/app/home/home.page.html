@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Soporte Steam · Tickets</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="contenedor">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="4">
+          <ion-card>
+            <ion-card-content>
+              <p>Eficiencia de resolución</p>
+              <strong>{{ eficiencia }}%</strong>
+              <span>{{ resueltos }} de {{ tickets.length }} tickets resueltos</span>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="8">
+          <ion-searchbar
+            placeholder="Buscar por problema, juego o usuario"
+            [(ngModel)]="busqueda"
+            (ngModelChange)="filtrar()"
+          ></ion-searchbar>
+          <div class="controles">
+            <ion-select label="Estado" [(ngModel)]="estado" (ngModelChange)="filtrar()">
+              <ion-select-option value="todos">Todos</ion-select-option>
+              <ion-select-option value="pendiente">Pendientes</ion-select-option>
+              <ion-select-option value="resuelto">Resueltos</ion-select-option>
+            </ion-select>
+            <ion-button size="small" fill="outline" (click)="limpiarFiltros()">
+              Limpiar
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-list>
+      @for (ticket of filtrados; track ticket.id) {
+        <ion-item button (click)="abrirModal(ticket)">
+          <ion-avatar slot="start">
+            <span>{{ ticket.usuario.charAt(0) }}</span>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ ticket.titulo }}</h2>
+            <p>{{ ticket.juego }} · {{ ticket.usuario }} · Prioridad {{ ticket.prioridad }}</p>
+          </ion-label>
+          <ion-badge slot="end" [color]="ticket.resuelto ? 'success' : 'warning'">
+            {{ ticket.resuelto ? 'Resuelto' : 'Pendiente' }}
+          </ion-badge>
+        </ion-item>
+      } @empty {
+        <p class="sin-resultados">No hay tickets que coincidan con tu búsqueda.</p>
+      }
+    </ion-list>
+  </div>
+</ion-content>
